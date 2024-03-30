@@ -19,40 +19,7 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => {
-    console.log("successful connections");
-  });
-
-const toursSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "A tour must have name"],
-    unique: true,
-  },
-  price: {
-    type: Number,
-    required: [true, "A tour must have price"],
-  },
-  rating: {
-    type: Number,
-    default: 4.5,
-  },
-});
-
-const Tour = mongoose.model("Tour", toursSchema);
-
-const testTour = new Tour({
-  name: "The Forest Hiker",
-  rating: 4.7,
-  price: 497,
-});
-
-testTour
-  .save()
-  .then((con) => {
-    console.log(con);
-  })
-  .catch((err) => {
-    console.log("ERROR:" + err);
+    console.log("DB connections successful");
   });
 
 // console.log(process.env);
