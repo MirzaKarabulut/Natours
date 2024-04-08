@@ -2,7 +2,13 @@ const Tour = require("./../models/tourModel");
 
 exports.getAllTour = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // const tours = await Tour.find()
+    //   .where("duration")
+    //   .equals(5)
+    //   .where("difficulty")
+    //   .equals("easy");
+
+    const tours = await Tour.find(req.query);
     res.status(200).json({
       status: "success",
       requestdate: req.requestTime,
@@ -48,7 +54,7 @@ exports.createTour = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: "fail",
-      message: "Invalid data sent!",
+      message: err,
     });
   }
 };
