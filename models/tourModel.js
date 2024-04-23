@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+const validator = require("validator");
 
 const toursSchema = new mongoose.Schema(
   {
@@ -8,6 +9,9 @@ const toursSchema = new mongoose.Schema(
       required: [true, "A tour must have a name!!"],
       unique: true,
       trim: true,
+      maxlenght: [40, "A tour must have equal or less then 40 character!!"],
+      minlenght: [10, "A tour must have equal or less then 10 character!!"],
+      // validate: [validator.isAlpha, "Tour name must only contain character!!"],
     },
     slug: String,
     duration: {
@@ -21,10 +25,16 @@ const toursSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       required: [true, "A tour must have a difficulty!!"],
+      enum: {
+        values: ["easy", "medium", "difficult"],
+        message: "Difficulty is either: easy, medium, difficult!!",
+      },
     },
     ratingAverage: {
       type: Number,
       default: 4.5,
+      max: [5, "Rating must be blow 5!!"],
+      min: [1, "Rating must be above 1!!"],
     },
     ratingQuantity: {
       type: Number,
@@ -34,7 +44,16 @@ const toursSchema = new mongoose.Schema(
       type: Number,
       required: [true, "A tour must have a price!!"],
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      validate: {
+        validator: function (val) {
+          // This only points to curr doc on new doc creation
+          return val < this.price;
+        },
+        message: "Discount price ({VALUE}) should be below regular price!!",
+      },
+    },
     summary: {
       type: String,
       trim: true,
@@ -92,14 +111,12 @@ toursSchema.pre(/^find/, function (next) {
 
 toursSchema.pre(/^find/, function (doc, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
-  console.log(doc);
   next();
 });
 
 // Aggregation Middleware
 toursSchema.pre("aggregate", function () {
   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  console.log(this.pipeline());
 });
 
 const Tour = mongoose.model("Tour", toursSchema);
