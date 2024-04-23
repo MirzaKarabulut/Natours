@@ -109,7 +109,7 @@ toursSchema.pre(/^find/, function (next) {
   next();
 });
 
-toursSchema.pre(/^find/, function (doc, next) {
+toursSchema.pre(/^find/, function (next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
   next();
 });
