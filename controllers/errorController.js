@@ -1,3 +1,5 @@
+const AppError = require("../utils/appError");
+
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -9,7 +11,7 @@ const sendErrorDev = (err, res) => {
 
 const sendErrorProd = (err, res) => {
   // Operational, trusted error: Send message to the client
-  if (err.Operational) {
+  if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
@@ -28,6 +30,11 @@ const sendErrorProd = (err, res) => {
   }
 };
 
+const castErrorHandlerDB = (err) => {
+  let msg = `Invalid value for ${err.value} for field ${err.path}`;
+  return new AppError(msg, 400);
+};
+
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
@@ -35,6 +42,9 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV == "development") {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV == "production") {
-    sendErrorProd(err, res);
+    // copy of err
+    let error = { ...err, name: err.name };
+    if (error.name == "CastError") error = castErrorHandlerDB(error);
+    sendErrorProd(error, res);
   }
 };
