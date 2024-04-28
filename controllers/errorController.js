@@ -35,6 +35,20 @@ const castErrorHandlerDB = (err) => {
   return new AppError(msg, 400);
 };
 
+const duplicateErrorHandlerDB = (err) => {
+  let value = err.keyValue.name;
+  let msg = `Duplicate field value: ${value}. Please use another value!!`;
+  return new AppError(msg, 400);
+};
+
+const validationErrorHandlerDB = (err) => {
+  let value = Object.values(err.errors)
+    .map((el) => el.message)
+    .join("  ");
+  let msg = `Please complete all required fields: ${value}.`;
+  return new AppError(msg, 400);
+};
+
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
@@ -45,6 +59,9 @@ module.exports = (err, req, res, next) => {
     // copy of err
     let error = { ...err, name: err.name };
     if (error.name == "CastError") error = castErrorHandlerDB(error);
+    if (error.name == "MongoError") error = duplicateErrorHandlerDB(error);
+    if (error.name == "ValidationError")
+      error = validationErrorHandlerDB(error);
     sendErrorProd(error, res);
   }
 };
