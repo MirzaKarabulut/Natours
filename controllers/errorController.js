@@ -1,6 +1,7 @@
 const AppError = require("../utils/appError");
 
 const sendErrorDev = (err, res) => {
+  // all error details for developers
   res.status(err.statusCode).json({
     status: err.status,
     error: err,
@@ -20,8 +21,7 @@ const sendErrorProd = (err, res) => {
   // Programming or other unknown erros: don't leak error details
   else {
     // 1) Log the error
-    console.error("ERROR!!", err);
-
+    console.error("ERROR!! 💣", err);
     // 2) Generic message to client
     res.status(500).json({
       status: "error",
