@@ -4,6 +4,9 @@ const authController = require("./../controllers/authController");
 
 const router = express.Router();
 
+router.post("/signup", authController.signup);
+router.post("/login", authController.login);
+
 router
   .route("/api/v1/users")
   .get(userController.getAllUsers)
@@ -13,7 +16,5 @@ router
   .get(userController.getUsers)
   .patch(userController.updateUsers)
   .delete(userController.deleteUsers);
-
-router.post("/signup", authController.signup);
 
 module.exports = router;
