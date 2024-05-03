@@ -2,12 +2,6 @@
 
 A tour operator booking app with a REST API using MongoDB, Mongoose, Express and Stripe.
 
-<p align="center">
-  <a href="https://node-travel-app.onrender.com/">
-    <img src="screenshot.png" alt="See Demo deployed on Render">
-  </a>
-</p>
-
 ## Key features
 
 - building a REST API with Express, logging requests with Morgan and sending JSend responses.
@@ -53,5 +47,3 @@ A tour operator booking app with a REST API using MongoDB, Mongoose, Express and
 - implementing security best practices with express-rate-limit, helmet and CORS.
 - sending tokens in secure cookies and reading them with cookie-parser.
 - sanitizing data with express-mongo-sanitize, xss-clean and hpp.
-
-Based on [Node.js, Express, MongoDB & More: The Complete Bootcamp](https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/) by Jonas Schmedtmann (2019).
