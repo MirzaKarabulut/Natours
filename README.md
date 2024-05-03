@@ -2,7 +2,7 @@
 
 A tour operator booking app with a REST API using MongoDB, Mongoose, Express and Stripe.
 
-## Key features
+## Key Features
 
 - building a REST API with Express, logging requests with Morgan and sending JSend responses.
 - using the MVC (Model-View-Controller) architecture with separate routers.
@@ -29,14 +29,14 @@ A tour operator booking app with a REST API using MongoDB, Mongoose, Express and
 - using indexes, modeling geospatial data with $geoWithin and $geoNear operators.
 - publishing API documentation on Postman.
 
-## Error handling
+## Error Handling
 
 - handling operational errors and programmer errors with a middleware wrapping all async controllers.
 - sending complete error messages in development and user-friendly messages in production.
 - having a safety net for unhandled promise rejections, uncaught exceptions and SIGTERM signals with process.on.
 - debugging with ndb.
 
-## Authentication and authorization
+## Authentication and Authorization
 
 - hashing passwords with bcryptjs.
 - building a complete authentication workflow with JWT: user sign up, log in and reset password via email.
