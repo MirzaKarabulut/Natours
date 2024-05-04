@@ -2,6 +2,7 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
+const util = require("util");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -68,6 +69,11 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
   // 2) Verification token
+  const decoded = await util.promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET
+  );
+  console.log(decoded);
 
   // 3) Check if user still exist
 
