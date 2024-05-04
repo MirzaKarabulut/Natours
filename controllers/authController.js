@@ -73,10 +73,16 @@ exports.protect = catchAsync(async (req, res, next) => {
     token,
     process.env.JWT_SECRET
   );
-  console.log(decoded);
-
   // 3) Check if user still exist
-
+  const freshUser = await User.findById(decode.id);
+  if (!freshUser) {
+    return next(
+      new AppError(
+        "The user belonging to this token does no longer exist!!",
+        401
+      )
+    );
+  }
   // 4) Check if user change the password after token was issued
   next();
 });
