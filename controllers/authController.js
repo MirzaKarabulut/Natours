@@ -16,6 +16,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    passwordChangeAt: req.body.passwordChangeAt,
   });
 
   const token = signToken(newUser._id);
@@ -74,8 +75,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     process.env.JWT_SECRET
   );
   // 3) Check if user still exist
-  const freshUser = await User.findById(decode.id);
-  if (!freshUser) {
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
     return next(
       new AppError(
         "The user belonging to this token does no longer exist!!",
@@ -84,5 +85,17 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
   // 4) Check if user change the password after token was issued
+  if (currentUser.changePasswordAfter(decoded.iat)) {
+    return next(
+      new AppError(
+        "User recently changed the password. Please log in again.",
+        401
+      )
+    );
+  }
+
+  // if every step passed
+  req.user = currentUser;
+
   next();
 });
